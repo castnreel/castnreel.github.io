@@ -6,7 +6,7 @@ border: #ac2727;
 border-style: ridge;
 }
 body{
-    background-color:#37aac8;
+    background-color: #37aac8;
     color: #ac2727;
 }
 h2{
@@ -75,5 +75,15 @@ body {
     color:#00583b;
     border-style: double;
     border-color:#ff8c8c ;
-   border:
+  }
+  canvas {
+  
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  video{
+    border: #B74879;
+    border-style: groove;
+    border-width: 20px;
   }

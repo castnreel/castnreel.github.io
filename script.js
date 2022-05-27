@@ -1,135 +1,126 @@
-window.human = false;
-
-var canvasEl = document.querySelector('.fireworks');
-var ctx = canvasEl.getContext('2d');
-var numberOfParticules = 30;
-var pointerX = 0;
-var pointerY = 0;
-var tap = ('ontouchstart' in window || navigator.msMaxTouchPoints) ? 'touchstart' : 'mousedown';
-var colors = ['#FF1461', '#18FF92', '#5A87FF', '#FBF38C'];
-
-function setCanvasSize() {
-  canvasEl.width = window.innerWidth * 2;
-  canvasEl.height = window.innerHeight * 2;
-  canvasEl.style.width = window.innerWidth + 'px';
-  canvasEl.style.height = window.innerHeight + 'px';
-  canvasEl.getContext('2d').scale(2, 2);
-}
-
-function updateCoords(e) {
-  pointerX = e.clientX || e.touches[0].clientX;
-  pointerY = e.clientY || e.touches[0].clientY;
-}
-
-function setParticuleDirection(p) {
-  var angle = anime.random(0, 360) * Math.PI / 180;
-  var value = anime.random(50, 180);
-  var radius = [-1, 1][anime.random(0, 1)] * value;
-  return {
-    x: p.x + radius * Math.cos(angle),
-    y: p.y + radius * Math.sin(angle)
-  }
-}
-
-function createParticule(x,y) {
-  var p = {};
-  p.x = x;
-  p.y = y;
-  p.color = colors[anime.random(0, colors.length - 1)];
-  p.radius = anime.random(16, 32);
-  p.endPos = setParticuleDirection(p);
-  p.draw = function() {
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.radius, 0, 2 * Math.PI, true);
-    ctx.fillStyle = p.color;
-    ctx.fill();
-  }
-  return p;
-}
-
-function createCircle(x,y) {
-  var p = {};
-  p.x = x;
-  p.y = y;
-  p.color = '#FFF';
-  p.radius = 0.1;
-  p.alpha = .5;
-  p.lineWidth = 6;
-  p.draw = function() {
-    ctx.globalAlpha = p.alpha;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.radius, 0, 2 * Math.PI, true);
-    ctx.lineWidth = p.lineWidth;
-    ctx.strokeStyle = p.color;
-    ctx.stroke();
-    ctx.globalAlpha = 1;
-  }
-  return p;
-}
-
-function renderParticule(anim) {
-  for (var i = 0; i < anim.animatables.length; i++) {
-    anim.animatables[i].target.draw();
-  }
-}
-
-function animateParticules(x, y) {
-  var circle = createCircle(x, y);
-  var particules = [];
-  for (var i = 0; i < numberOfParticules; i++) {
-    particules.push(createParticule(x, y));
-  }
-  anime.timeline().add({
-    targets: particules,
-    x: function(p) { return p.endPos.x; },
-    y: function(p) { return p.endPos.y; },
-    radius: 0.1,
-    duration: anime.random(1200, 1800),
-    easing: 'easeOutExpo',
-    update: renderParticule
-  })
-    .add({
-    targets: circle,
-    radius: anime.random(80, 160),
-    lineWidth: 0,
-    alpha: {
-      value: 0,
-      easing: 'linear',
-      duration: anime.random(600, 800),  
+var w = c.width = window.innerWidth,
+    h = c.height = window.innerHeight,
+    ctx = c.getContext( '2d' ),
+    
+    opts = {
+      
+      len: 20,
+      count: 50,
+      baseTime: 10,
+      addedTime: 10,
+      dieChance: .05,
+      spawnChance: 1,
+      sparkChance: .1,
+      sparkDist: 10,
+      sparkSize: 2,
+      
+      color: 'hsl(hue,100%,light%)',
+      baseLight: 50,
+      addedLight: 10, // [50-10,50+10]
+      shadowToTimePropMult: 6,
+      baseLightInputMultiplier: .01,
+      addedLightInputMultiplier: .02,
+      
+      cx: w / 2,
+      cy: h / 2,
+      repaintAlpha: .04,
+      hueChange: .1
     },
-    duration: anime.random(1200, 1800),
-    easing: 'easeOutExpo',
-    update: renderParticule,
-    offset: 0
-  });
-}
+    
+    tick = 0,
+    lines = [],
+    dieX = w / 2 / opts.len,
+    dieY = h / 2 / opts.len,
+    
+    baseRad = Math.PI * 2 / 6;
+    
+ctx.fillStyle = 'black';
+ctx.fillRect( 0, 0, w, h );
 
-var render = anime({
-  duration: Infinity,
-  update: function() {
-    ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
-  }
+function loop() {
+  
+  window.requestAnimationFrame( loop );
+  
+  ++tick;
+  
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = 'rgba(0,0,0,alp)'.replace( 'alp', opts.repaintAlpha );
+  ctx.fillRect( 0, 0, w, h );
+  ctx.globalCompositeOperation = 'lighter';
+  
+  if( lines.length < opts.count && Math.random() < opts.spawnChance )
+    lines.push( new Line );
+  
+  lines.map( function( line ){ line.step(); } );
+}
+function Line(){
+  
+  this.reset();
+}
+Line.prototype.reset = function(){
+  
+  this.x = 0;
+  this.y = 0;
+  this.addedX = 0;
+  this.addedY = 0;
+  
+  this.rad = 0;
+  
+  this.lightInputMultiplier = opts.baseLightInputMultiplier + opts.addedLightInputMultiplier * Math.random();
+  
+  this.color = opts.color.replace( 'hue', tick * opts.hueChange );
+  this.cumulativeTime = 0;
+  
+  this.beginPhase();
+}
+Line.prototype.beginPhase = function(){
+  
+  this.x += this.addedX;
+  this.y += this.addedY;
+  
+  this.time = 0;
+  this.targetTime = ( opts.baseTime + opts.addedTime * Math.random() ) |0;
+  
+  this.rad += baseRad * ( Math.random() < .5 ? 1 : -1 );
+  this.addedX = Math.cos( this.rad );
+  this.addedY = Math.sin( this.rad );
+  
+  if( Math.random() < opts.dieChance || this.x > dieX || this.x < -dieX || this.y > dieY || this.y < -dieY )
+    this.reset();
+}
+Line.prototype.step = function(){
+  
+  ++this.time;
+  ++this.cumulativeTime;
+  
+  if( this.time >= this.targetTime )
+    this.beginPhase();
+  
+  var prop = this.time / this.targetTime,
+      wave = Math.sin( prop * Math.PI / 2  ),
+      x = this.addedX * wave,
+      y = this.addedY * wave;
+  
+  ctx.shadowBlur = prop * opts.shadowToTimePropMult;
+  ctx.fillStyle = ctx.shadowColor = this.color.replace( 'light', opts.baseLight + opts.addedLight * Math.sin( this.cumulativeTime * this.lightInputMultiplier ) );
+  ctx.fillRect( opts.cx + ( this.x + x ) * opts.len, opts.cy + ( this.y + y ) * opts.len, 2, 2 );
+  
+  if( Math.random() < opts.sparkChance )
+    ctx.fillRect( opts.cx + ( this.x + x ) * opts.len + Math.random() * opts.sparkDist * ( Math.random() < .5 ? 1 : -1 ) - opts.sparkSize / 2, opts.cy + ( this.y + y ) * opts.len + Math.random() * opts.sparkDist * ( Math.random() < .5 ? 1 : -1 ) - opts.sparkSize / 2, opts.sparkSize, opts.sparkSize )
+}
+loop();
+
+window.addEventListener( 'resize', function(){
+  
+  w = c.width = window.innerWidth;
+  h = c.height = window.innerHeight;
+  ctx.fillStyle = 'black';
+  ctx.fillRect( 0, 0, w, h );
+  
+  opts.cx = w / 2;
+  opts.cy = h / 2;
+  
+  dieX = w / 2 / opts.len;
+  dieY = h / 2 / opts.len;
 });
-
-document.addEventListener(tap, function(e) {
-  window.human = true;
-  render.play();
-  updateCoords(e);
-  animateParticules(pointerX, pointerY);
-}, false);
-
-var centerX = window.innerWidth / 2;
-var centerY = window.innerHeight / 2;
-
-function autoClick() {
-  if (window.human) return;
-  animateParticules(
-    anime.random(centerX-50, centerX+50), 
-    anime.random(centerY-50, centerY+50)
-  );
-  anime({duration: 200}).finished.then(autoClick);
-}
-
-autoClick();
-setCanvasSize();
-window.addEventListener('resize', setCanvasSize, false);
