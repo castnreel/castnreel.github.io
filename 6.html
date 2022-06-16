@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>how to build a vex bot</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="style.css" rel="stylesheet">
+    </head>
+    <body>
+        <p><div class="topnav">
+            <a class="active" href="1.html">Step 1</a>
+            <a href="2.html">Step 2</a>
+            <a href="3.html">Step 3</a>
+            <a href="4.html">Step 4</a> 
+            <a href="5.html">CODE</a> 
+            <a href="6.html">CODE 2 </a> 
+            <a href="7.html">Get The Bot Running</a>
+            <a href="index.html">Home</a>  </p>
+            
+            <br>
+           
+            <p>here is the code that I used it is in simple C </p>
+            
+           <a href="test1.c" download=""> <img src="532.png" width="50px"></a>
+             <h2 class="moveright">DOWNLOAD CODE HERE</h2>
+           <br>
+           <br><br><br>
+            <p>
+            #pragma config(Motor,  port1,           dtr,           tmotorVex393_HBridge, openLoop)
+            <br>
+            #pragma config(Motor,  port5,           claw,          tmotorVex393_MC29, openLoop)
+            <br>
+            #pragma config(Motor,  port10,          dtl,           tmotorVex393_HBridge, openLoop)
+            <br>
+            <br><br>
+            task main(){
+                <br>
+                while(1 == 1)<br>{<br>
+                    motor[port1]=(vexRT[Ch3];<br>motor[port10]=(vexRt[Ch2];
+                    <br> if(vexRT[Btn5U] == 1)<br>{<br>
+                        motor[port5] = 127; <br>
+                    }<br>
+                    else if(vexRT[Btn5D] == 1) <br> 
+                    {<br>
+                        motor[port5] = -127;<br>
+                    }
+                    <br>
+                    {<br>
+                        motor[port5] = 0;<br>}<br><br>}
+                        <br><br>} </p>
+                        
+        </body>
+</html>

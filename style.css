@@ -1,47 +1,4 @@
-h1{
-font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-text-align: center;
-color: #c85537 ;
-border: #ac2727;
-border-style: ridge;
-}
-body{
-    background-color: #37aac8;
-    color: #ac2727;
-}
-h2{
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    font-size: larger;
-}
-li{
-font-family: sans-serif;
-color: rgba(200, 20, 206, 0.747);
-font-size: 50px;
-text-align:justify;
-}
-h6{
-    font-family: monospace;
-    color: #37aac8;
-   text-align: end;
-}
-iframe{
-   border: #ff8c8c;
-    border-style: double;
-    border-width: 40px; 
-    
-
-}
-img{
-    border: #ff8c8c;
-    border-style:outset;
-    border-width: 10px;
-}
-body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-  }
-  
-  .topnav {
+.topnav {
     overflow: hidden;
     
   }
@@ -56,7 +13,7 @@ body {
   }
   
   .topnav a:hover {
-    background-color: #ddd;
+    background-color: rgb(221, 96, 96);
     color: black;
   }
   
@@ -64,26 +21,44 @@ body {
    
     color:#B74879 ;
   }
+  h1{
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color:#B84767;
+  }
+  body{
+    background-color:#f7a4bf ;
+  }
+  h2{
+   
+    color: #B74879;
+  }
+  img{
+    border-style: ridge ;
+    border-color:#0cdd86 ;
+  }
+  .nocss{
+    border-color: #f7a4bf;
+    border-style: none;
+  }
+  h3{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: red;
+  }
   p{
-      size:200px;
+    font-size: 20px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  color:#B84767;
   }
-  div{
-    margin-left: 70px ;
-    margin-top: 100px;
+  .moveright{
+    margin-left: 400px;
+    
   }
-  table{
-    color:#00583b;
-    border-style: double;
-    border-color:#ff8c8c ;
+  iframe{
+    border-style: ridge;
+    border-width: 10px;
   }
-  canvas {
-  
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-  video{
-    border: #B74879;
-    border-style: groove;
-    border-width: 20px;
+  ol{
+    color: #4b1e2b;
+    font-size: larger;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   }
